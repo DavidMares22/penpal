@@ -1,0 +1,28 @@
+
+    <div class="col-sm-3 ">
+
+
+
+      <div class="card ">
+
+        {% if request.user.profile.photo %}
+        <img class="card-img-top mx-auto rounded-circle " src="{{request.user.profile.photo.url}}" alt="">
+        {% else %}
+        <img class="card-img-top mx-auto rounded-circle " src="http://placehold.it/200x200" alt="">
+        {% endif %}
+        <div class="card-body">
+          <h4 class="card-title">
+            <a href="{% url 'pages:profile'  %}">{{request.user.username}}</a>
+          </h4>
+           {% if request.user.is_authenticated %}
+            Welcome, {{ user.username }} | <a href="{% url 'pages:logout' %}">Logout</a>
+            {% else %}
+            <a href="{% url 'pages:register' %}">Register</a> | <a href="{% url 'pages:login' %}">Login</a>
+            {% endif %}
+        </div>
+        <div class="card-footer">
+
+        </div>
+      </div>
+
+    </div>
