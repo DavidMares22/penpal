@@ -3,6 +3,45 @@
 
 {% block content %}
 
-    profile
+<div class="col-sm-8">
+
     
+
+   <p> profile of {{profile.user}}</p>
+
+    {% for f in friends %}
+        
+        <p>{{f}}</p>
+
+    {% endfor %}
+    
+{% if request.user.is_authenticated %}
+
+        {% if button_text == 'not_friend' %}
+			<a class='btn btn-primary' href="{% url 'pages:send_request' id %}">Add Friend</a>
+		{% elif button_text == 'request_sent' %}
+			<a class="btn btn-warning" href="{% url 'pages:cancel_request' id %}">Cancel Request</a>
+		{% endif %}
+
+    
+{% endif %}
+
+{% if request.user.profile.id == profile.id %}
+    <h2>Received Friend requests</h2>
+
+    
+    
+		{% for r_request in received_requests %}
+			<!-- <p><a href="{{ r_request.from_user.profile.get_absolute_url }}">{{ r_request.from_user.username }}</a></p> -->
+			<p><a href="">{{ r_request }}</a></p>
+			<small><a class='btn btn-primary' href="{% url 'pages:accept_request' r_request.from_user.id %}">Accept</a></small>
+			<small><a class='btn btn-danger' href="{% url 'pages:delete_request' r_request.from_user.id %}">Delete</a></small>
+		{% endfor %}
+
+    
+
+
+{% endif %}
+
+</div>
 {% endblock content %}

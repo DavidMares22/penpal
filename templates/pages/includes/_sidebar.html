@@ -1,5 +1,5 @@
 
-    <div class="col-sm-3 ">
+    <div class="col-lg-3 col-sm-4">
 
 
 
@@ -10,9 +10,9 @@
         {% else %}
         <img class="card-img-top mx-auto rounded-circle " src="http://placehold.it/200x200" alt="">
         {% endif %}
-        <div class="card-body">
-          <h4 class="card-title">
-            <a href="{% url 'pages:profile'  %}">{{request.user.username}}</a>
+        <div class="card-body ">
+          <h4 class="card-title text-center">
+            <a href="{{ request.user.profile.get_absolute_url }}">{{request.user.username}}</a>
           </h4>
            {% if request.user.is_authenticated %}
             Welcome, {{ user.username }} | <a href="{% url 'pages:logout' %}">Logout</a>

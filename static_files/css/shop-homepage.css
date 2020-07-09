@@ -1,6 +1,7 @@
 
 body {
   padding-top: 90px;
+  
 }
 
 .main-area{
@@ -12,3 +13,6 @@ body {
   height: 70%;
   
 }
+
+
+p { line-height: 20px;  }
