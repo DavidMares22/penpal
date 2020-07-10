@@ -1,3 +1,16 @@
+{% extends 'pages/base.html' %}
+
+
+
+
+{% block title %}
+<title>Login</title>
+{% endblock title %}
+
+{% block content %}
+
+<div class="col-sm-8 mx-auto">
+
 <h2>Login</h2>
 
 {% if form.non_field_errors %}
@@ -25,3 +38,7 @@
     
     <button type="submit" class=" btn btn-primary">Log in</button>
   </form>
+
+
+</div>
+{% endblock content %}

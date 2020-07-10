@@ -9,13 +9,18 @@ from django.contrib.auth.models import User
 from .models import FriendRequest,Profile
 
 def index(request):
+    
     if request.user.is_authenticated:
-        profiles = Profile.objects.exclude(user=request.user)
+        profile = Profile.objects.get(user=request.user)
+        users = Profile.objects.exclude(user=request.user)
+        
     else:
-        profiles = Profile.objects.all
-
+        users = Profile.objects.all
+        profile = ''
+        
     context = {
-        'profiles':profiles
+        'profile':profile,
+        'users':users,
     }
     return render(request,'pages/index.html',context)
 

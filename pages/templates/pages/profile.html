@@ -3,45 +3,62 @@
 
 {% block content %}
 
+{% include 'pages/includes/_sidebar.html' %}
+
 <div class="col-sm-8">
+	
+	<h3>{{profile.user}}</h3>
+	<h6>{{profile.user.email}}</h6>
 
+</br>
+	
+	<h4> List of friends </h4>
+	<table class="table">
+    <thead>
+      <tr>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+	  {% for f in friends %}   
+      <tr>  
+		<td>{{f.first}}</td>
+        <td>{{f.last}}</td>
+        <td >{{f.user.email}}</td>
+     </tr>	
+		{% endfor %}    
+    </tbody>
+  </table>
+
+</br>    
     
+{% if request.user.is_authenticated and request.user.profile.id != profile.id %}
 
-   <p> profile of {{profile.user}}</p>
-
-    {% for f in friends %}
-        
-        <p>{{f}}</p>
-
-    {% endfor %}
-    
-{% if request.user.is_authenticated %}
-
-        {% if button_text == 'not_friend' %}
+        {% if button_text == 'not_friend'%}
 			<a class='btn btn-primary' href="{% url 'pages:send_request' id %}">Add Friend</a>
 		{% elif button_text == 'request_sent' %}
 			<a class="btn btn-warning" href="{% url 'pages:cancel_request' id %}">Cancel Request</a>
 		{% endif %}
 
-    
 {% endif %}
 
-{% if request.user.profile.id == profile.id %}
-    <h2>Received Friend requests</h2>
-
-    
+{% if request.user.profile.id == profile.id and received_requests %}
+    <h4>Received Friend requests</h4>
     
 		{% for r_request in received_requests %}
 			<!-- <p><a href="{{ r_request.from_user.profile.get_absolute_url }}">{{ r_request.from_user.username }}</a></p> -->
 			<p><a href="">{{ r_request }}</a></p>
 			<small><a class='btn btn-primary' href="{% url 'pages:accept_request' r_request.from_user.id %}">Accept</a></small>
 			<small><a class='btn btn-danger' href="{% url 'pages:delete_request' r_request.from_user.id %}">Delete</a></small>
-		{% endfor %}
+		{% endfor %}    
 
-    
-
-
+	
 {% endif %}
 
 </div>
+
+
+
 {% endblock content %}
