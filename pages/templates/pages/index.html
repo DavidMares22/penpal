@@ -13,25 +13,27 @@
 
       <div class="row">
 
+     
         <div class="card" style="width: 100%;">
           <div class="card-header">
             Search
           </div>
           <div class="card-body">
-            <form>
+            <form action="{% url 'pages:search' %}" method="GET">
               <div class="form-group">
-                <label for="exampleInputEmail1">Email address</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                  placeholder="Enter email">
+                  <label for="langspeaks">Speaks</label>
+                <input name="q" type="text" class="form-control" id="langspeaks" >
 
+                <label for="langlearning">Is learning</label>
+                <input type="text" class="form-control" id="langlearning">
               </div>
 
 
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="submit" class="btn btn-primary">Search</button>
             </form>
           </div>
-        </div>
-
+      
+      </div>
 
 
         <div class="main-area row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-3">
@@ -44,8 +46,10 @@
               <img src="{{u.photo.url}}" class="card-img-top mx-auto" alt="...">
               <div class="card-body">
                 <h5 class="card-title text-center"><a href="{{u.get_absolute_url}}">{{u}}</a></h5> 
-                <p class="card-text">This is a longer card with supporting text below as a natural lead-in to
-                  additional content. This content is a little bit longer.</p>
+                <p class="card-text">Speaks: {{u.speaks}}  </p>
+                <p class="card-text">
+                  is learning {{u.is_learning}}
+                </p>
               </div>
             </div>
             

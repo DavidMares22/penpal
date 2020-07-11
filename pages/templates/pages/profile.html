@@ -6,16 +6,29 @@
 {% include 'pages/includes/_sidebar.html' %}
 
 <div class="col-sm-8">
-	
-	<h3>{{profile.user}}</h3>
-	<h6>{{profile.user.email}}</h6>
 
-</br>
+
+	<h3>{{profile.user }}</h3>
+	<h6>{{profile.first}}  {{profile.last}} | {{profile.user.email}}</h6>
+	<h6>Speaks: {{profile.speaks}}</h6>
+	<h6>Is learning: {{profile.is_learning}}</h6>
+ 
 	
+
+<p>
+{% if request.user.profile.id == profile.id %}
+	<a class="btn btn-info" href="{% url 'pages:edit' %}"> Edit profile </a>
+{% endif %}
+
+</p>
+
+
+
 	<h4> List of friends </h4>
 	<table class="table">
     <thead>
       <tr>
+		<th>Username</th>
         <th>Firstname</th>
         <th>Lastname</th>
         <th>Email</th>
@@ -23,7 +36,8 @@
     </thead>
     <tbody>
 	  {% for f in friends %}   
-      <tr>  
+      <tr>
+		<td>{{f}}</td>  
 		<td>{{f.first}}</td>
         <td>{{f.last}}</td>
         <td >{{f.user.email}}</td>
@@ -32,8 +46,9 @@
     </tbody>
   </table>
 
-</br>    
-    
+ 
+
+<p>
 {% if request.user.is_authenticated and request.user.profile.id != profile.id %}
 
         {% if button_text == 'not_friend'%}
@@ -44,6 +59,9 @@
 
 {% endif %}
 
+</p>
+
+<p>
 {% if request.user.profile.id == profile.id and received_requests %}
     <h4>Received Friend requests</h4>
     
@@ -56,6 +74,8 @@
 
 	
 {% endif %}
+</p>
+
 
 </div>
 
