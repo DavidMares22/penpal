@@ -182,16 +182,22 @@ def search(request):
         profile=''
 
     # english,''german','french'
-    query = request.GET.get('q').replace(" ", "")
+    query = request.GET.get('speaks').replace(" ", "")
+    query2 = request.GET.get('learning').replace(" ", "")
     # print(query)
     # get a list of values ['english','german','french']
-    list_query = query.split(',')
-    # print(list_query)
-    results = Profile.objects.filter(speaks__icontains=list_query[0])
+    list_speaks = query.split(',')
+    list_learning = query2.split(',')
+    # print(list_learning)
 
-    if len(list_query)>1:
-        for lq in range(len(list_query)-1):
-            results = results.filter(speaks__icontains=list_query[lq+1])
+    results = Profile.objects.filter(speaks__icontains=list_speaks[0])
+
+    if len(list_speaks)>1:
+        for lq in range(len(list_speaks)-1):
+            results = results.filter(speaks__icontains=list_speaks[lq+1])
+
+    for lq in range(len(list_learning)):
+        results = results.filter(is_learning__icontains=list_learning[lq])
     
     
     # print(results.values('speaks'))

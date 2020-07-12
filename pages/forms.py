@@ -12,8 +12,10 @@ LANGUAGE_CHOICES =(
     )
 
 class ProfileEditForm(forms.ModelForm):
-    speaks =  forms.MultipleChoiceField(choices = LANGUAGE_CHOICES,required=False) 
-    is_learning = forms.MultipleChoiceField(choices = LANGUAGE_CHOICES,required=False) 
+    first = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    last = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    speaks =  forms.MultipleChoiceField(choices = LANGUAGE_CHOICES, widget=forms.SelectMultiple(attrs={'class': 'form-control'})) 
+    is_learning = forms.MultipleChoiceField(choices = LANGUAGE_CHOICES,widget=forms.SelectMultiple(attrs={'class': 'form-control'})) 
     class Meta:
         model = Profile
         fields = ['first','last','speaks','is_learning','photo']

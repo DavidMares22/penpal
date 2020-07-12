@@ -14,36 +14,38 @@
       <div class="row">
 
      
-        <div class="card" style="width: 100%;">
-          <div class="card-header">
-            Search
+        <div class="card bg-light" style="width: 100%;">
+          <div class="card-header text-center">
+            Search for Penpals
           </div>
           <div class="card-body">
             <form action="{% url 'pages:search' %}" method="GET">
-              <div class="form-group">
+              <div class="form-group ">
                   <label for="langspeaks">Speaks</label>
-                <input name="q" type="text" class="form-control" id="langspeaks" >
+                <input name="speaks" type="text" class="form-control" id="langspeaks" value="{{ request.GET.speaks }}" placeholder="value 1, value2">
+              </div>
 
+              <div class="form-group ">
                 <label for="langlearning">Is learning</label>
-                <input type="text" class="form-control" id="langlearning">
+                <input name="learning" type="text" class="form-control" id="langlearning" value="{{ request.GET.learning }}" placeholder="value 1, value2">
               </div>
 
 
-              <button type="submit" class="btn btn-primary">Search</button>
+              <button type="submit" class="btn btn-info">Search</button>
             </form>
           </div>
       
       </div>
 
 
-        <div class="main-area row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-3">
+        <div class="main-area row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 ">
 
           
 {% for u in users  %}
           <div class="col mb-4">
           
             <div class="card">
-              <img src="{{u.photo.url}}" class="card-img-top mx-auto" alt="...">
+              <img src="{{u.photo.url}}" class="card-img-top mx-auto" >
               <div class="card-body">
                 <h5 class="card-title text-center"><a href="{{u.get_absolute_url}}">{{u}}</a></h5> 
                 <p class="card-text">Speaks: {{u.speaks}}  </p>
