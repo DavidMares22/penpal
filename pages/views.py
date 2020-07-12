@@ -7,21 +7,30 @@ from django.contrib.auth import logout as do_logout
 from pages.forms import RegisterForm,ProfileEditForm
 from django.contrib.auth.models import User
 from .models import FriendRequest,Profile
-from django.db.models import Q
+from django.core.paginator import Paginator
 
 def index(request):
     
+
+    users = Profile.objects.all()
+    profile = ''
+
     if request.user.is_authenticated:
         profile = Profile.objects.get(user=request.user)
         users = Profile.objects.exclude(user=request.user)
         
-    else:
-        users = Profile.objects.all
-        profile = ''
         
+    
+    page_number = request.GET.get('page')
+    paginator = Paginator(users, 2)
+    
+    
+    page_obj = paginator.get_page(page_number)
+    
     context = {
         'profile':profile,
-        'users':users,
+        # 'users':users,
+        'page_obj': page_obj
     }
     return render(request,'pages/index.html',context)
 
@@ -29,7 +38,7 @@ def index(request):
 def profile(request,profile_id):
     
     profile = Profile.objects.get(id=profile_id)
-    friends = profile.friends.all
+    friends = profile.friends.all()
     received_requests = FriendRequest.objects.filter(to_user=profile.user)
     
     button_text = ''
@@ -199,11 +208,20 @@ def search(request):
     for lq in range(len(list_learning)):
         results = results.filter(is_learning__icontains=list_learning[lq])
     
+    page_number = request.GET.get('page')
+    paginator = Paginator(results, 2)
+    
+    
+    page_obj = paginator.get_page(page_number)
     
     # print(results.values('speaks'))
+
+    s = f"speaks={request.GET.get('speaks')}&learning={request.GET.get('learning')}&"
     context = {
     'profile':profile,
-    'users':results
+    # 'users':results
+    'page_obj':page_obj,
+    's':s
     }
 
     return render(request,'pages/index.html',context)

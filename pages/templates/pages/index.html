@@ -38,10 +38,15 @@
       </div>
 
 
-        <div class="main-area row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 ">
+      
+
+
+
+<div class="main-area row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 ">
 
           
-{% for u in users  %}
+{% comment %} {% for u in users  %} {% endcomment %}
+        {% for u in page_obj  %}
           <div class="col mb-4">
           
             <div class="card">
@@ -57,12 +62,29 @@
             
           </div>
         {% endfor %}
+
+
+
+
+
         </div>
 
 
         <!-- main-area -->
+      
+      
+      
+      
+      
+      
+  
+      
       </div>
       <!-- /.row -->
+
+
+
+      
     </div>
     <!-- /.col-lg-9 -->
    
