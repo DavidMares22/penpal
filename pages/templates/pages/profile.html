@@ -40,7 +40,10 @@
 		<td>{{f}}</td>  
 		<td>{{f.first}}</td>
         <td>{{f.last}}</td>
-        <td >{{f.user.email}}</td>
+		<td >{{f.user.email}}</td>
+		{% if request.user.profile.id == profile.id %}
+		<td ><a href="{% url 'pages:unfriend' f.id %}" class="btn btn-danger confirm-delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal" id="deleteButton{{f.id}}"> Unfriend</a></td>
+		{% endif %}
      </tr>	
 		{% endfor %}    
     </tbody>
@@ -66,7 +69,6 @@
     <h4>Received Friend requests</h4>
     
 		{% for r_request in received_requests %}
-			<!-- <p><a href="{{ r_request.from_user.profile.get_absolute_url }}">{{ r_request.from_user.username }}</a></p> -->
 			<p><a href="">{{ r_request }}</a></p>
 			<small><a class='btn btn-primary' href="{% url 'pages:accept_request' r_request.from_user.id %}">Accept</a></small>
 			<small><a class='btn btn-danger' href="{% url 'pages:delete_request' r_request.from_user.id %}">Delete</a></small>
@@ -79,6 +81,21 @@
 
 </div>
 
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" caller-id="" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+	  <div class="modal-content">
+		<div class="modal-body confirm-delete">
+		  This action is permanent!
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+		  <button type="button" class="btn btn-danger" data-dismiss="modal" id="confirmDeleteButtonModal">Delete</button>
+		</div>
+	  </div>
+	</div>
+  </div>
 
-
+ 
 {% endblock content %}
+
+

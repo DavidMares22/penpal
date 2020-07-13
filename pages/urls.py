@@ -15,6 +15,7 @@ urlpatterns = [
     path("request/cancel/<int:to_user_id>", cancel_request, name="cancel_request"),
     path("edit/",edit_profile,name="edit"),
     path("search/",search,name="search"),
+    path("unfriend/<int:user_id>",unfriend,name="unfriend"),
     
     
 ]

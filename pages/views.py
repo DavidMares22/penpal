@@ -135,6 +135,11 @@ def accept_friend_request(request, from_user_id):
 	frequest.delete()
 	return redirect('pages:profile',profile_id=user1.profile.id)
 
+def unfriend(request,user_id):
+    user_to_delete = Profile.objects.get(id=user_id)
+    profile = request.user.profile
+    profile.friends.remove(user_to_delete)
+    return redirect('pages:profile',profile_id=profile.id)
 
 def delete_friend_request(request, from_user_id):
 	from_user = User.objects.get(id=from_user_id)
