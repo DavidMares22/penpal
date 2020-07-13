@@ -85,14 +85,12 @@ def edit_profile(request):
     
     if request.method == 'POST':
         form = ProfileEditForm(instance=request.user.profile,data=request.POST,files=request.FILES)
-
         if form.is_valid():
             obj = form.save(commit=False)
             obj.speaks = form.selected_speaks_labels('speaks')
             obj.is_learning = form.selected_speaks_labels('is_learning')
             obj.save()
-            
-            
+            messages.success(request,'Profile successfully updated')
             return redirect('pages:profile', profile_id=request.user.profile.id)
     else:        
         
@@ -148,7 +146,6 @@ def delete_friend_request(request, from_user_id):
 	return redirect('pages:profile',profile_id=request.user.profile.id)
 
 def login(request):
-    
     if request.method == 'POST':
         form = UserLoginForm(data=request.POST)
         if form.is_valid():
@@ -157,11 +154,9 @@ def login(request):
             user = authenticate(username=username, password=password)
             
             if user is not None:
-                do_login(request, user)       
+                do_login(request, user)     
                 return redirect('pages:index')
-
             else:
-                messages.error(request,'username or password not correct')
                 return redirect('pages:login')
     else:
         form = UserLoginForm()
@@ -179,7 +174,7 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request,'Account succesfully created')
+            messages.success(request,'Profile succesfully created')
             return redirect('pages:login')
         else:
             messages.error(request,'An error ocurred')
