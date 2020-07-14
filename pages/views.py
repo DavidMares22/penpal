@@ -39,18 +39,18 @@ def profile(request,profile_id):
     
     profile = Profile.objects.get(id=profile_id)
     friends = profile.friends.all()
-    received_requests = FriendRequest.objects.filter(to_user=profile.user)
+    received_requests = FriendRequest.objects.filter(to_profile=profile)
     
     button_text = ''
     if request.user.is_authenticated:
         if profile not in request.user.profile.friends.all():
             button_text = 'not_friend'
-            if len(FriendRequest.objects.filter(from_user=request.user).filter(to_user=profile.user)) == 1:
+            if len(FriendRequest.objects.filter(from_profile=request.user.profile).filter(to_profile=profile)) == 1:
                 button_text = 'request_sent'
 
     context = {
         'profile':profile,
-        'id':profile.user.id,
+        # 'id':profile.user.id,
         'friends':friends,
         'received_requests':received_requests,
         'button_text':button_text
@@ -105,43 +105,43 @@ def edit_profile(request):
     return render(request, 'pages/edit.html',{'form':form})
 
 
-def send_request(request, to_user_id):
+def send_request(request, to_profile_id):
     if request.user.is_authenticated:
-        to_user = User.objects.get(pk=to_user_id)
+        to_profile = Profile.objects.get(pk=to_profile_id)
         frequest = FriendRequest.objects.get_or_create(
-            from_user = request.user,
-            to_user = to_user
+            from_profile = request.user.profile,
+            to_profile = to_profile
         )
-    return redirect('pages:profile', profile_id=to_user.profile.id)
+    return redirect('pages:profile', profile_id=to_profile.id)
 
-def cancel_request(request,  to_user_id):
+def cancel_request(request,  to_profile_id):
 	if request.user.is_authenticated:
-		to_user = User.objects.get(pk=to_user_id)
+		to_profile = Profile.objects.get(pk=to_profile_id)
 		frequest = FriendRequest.objects.filter(
-			from_user=request.user,
-			to_user=to_user).first()
+			from_profile=request.user.profile,
+			to_profile=to_profile).first()
 		frequest.delete()
-		return redirect('pages:profile',profile_id=to_user.profile.id)
+		return redirect('pages:profile',profile_id=to_profile.id)
 
-def accept_friend_request(request, from_user_id):
-	from_user = User.objects.get(id=from_user_id)
-	frequest = FriendRequest.objects.filter(from_user=from_user, to_user=request.user).first()
-	user1 = frequest.to_user
-	user2 = from_user
-	user1.profile.friends.add(user2.profile)
-	user2.profile.friends.add(user1.profile)
+def accept_friend_request(request, from_profile_id):
+	from_profile = Profile.objects.get(id=from_profile_id)
+	frequest = FriendRequest.objects.filter(from_profile=from_profile, to_profile=request.user.profile).first()
+	p1 = frequest.to_profile
+	p2 = from_profile
+	p1.friends.add(p2)
+	p2.friends.add(p1)
 	frequest.delete()
-	return redirect('pages:profile',profile_id=user1.profile.id)
+	return redirect('pages:profile',profile_id=p1.id)
 
-def unfriend(request,user_id):
-    user_to_delete = Profile.objects.get(id=user_id)
+def unfriend(request,profile_id):
+    profile_to_unfriend = Profile.objects.get(id=profile_id)
     profile = request.user.profile
-    profile.friends.remove(user_to_delete)
+    profile.friends.remove(profile_to_unfriend)
     return redirect('pages:profile',profile_id=profile.id)
 
-def delete_friend_request(request, from_user_id):
-	from_user = User.objects.get(id=from_user_id)
-	frequest = FriendRequest.objects.filter(from_user=from_user, to_user=request.user).first()
+def delete_friend_request(request, from_profile_id):
+	from_profile = Profile.objects.get(id=from_profile_id)
+	frequest = FriendRequest.objects.filter(from_profile=from_profile, to_profile=request.user.profile).first()
 	frequest.delete()
 	return redirect('pages:profile',profile_id=request.user.profile.id)
 
@@ -199,14 +199,15 @@ def search(request):
     list_learning = query2.split(',')
     # print(list_learning)
 
-    results = Profile.objects.filter(speaks__icontains=list_speaks[0])
+    results = Profile.objects.filter(speaks__icontains=list_speaks[0]).filter(is_learning__icontains=list_learning[0])
 
     if len(list_speaks)>1:
         for lq in range(len(list_speaks)-1):
             results = results.filter(speaks__icontains=list_speaks[lq+1])
-
-    for lq in range(len(list_learning)):
-        results = results.filter(is_learning__icontains=list_learning[lq])
+    
+    if len(list_learning)>1:
+        for lq in range(len(list_learning)-1):
+            results = results.filter(is_learning__icontains=list_learning[lq+1])
     
     page_number = request.GET.get('page')
     paginator = Paginator(results, 2)

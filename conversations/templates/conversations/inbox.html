@@ -1,0 +1,50 @@
+{% extends 'pages/base.html' %}
+
+
+{% block content %}
+
+{% include 'pages/includes/_sidebar.html' %}
+
+<div class="col-sm-8">
+
+
+  {% for chat in chats %}
+
+    <p>{{chat}}</p>
+
+  {% endfor %}
+
+
+
+	<h4> Start a new chat: </h4>
+	<table class="table">
+    <thead>
+      <tr>
+		<th>Username</th>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+	  {% for f in friends %}   
+      <tr>
+		<td>{{f}}</td>  
+		<td>{{f.first}}</td>
+        <td>{{f.last}}</td>
+		<td >{{f.user.email}}</td>
+		{% if request.user.profile.id == profile.id %}
+		<td ><a href="{% url 'conversations:inbox_new_chat' f.id %}" class="btn btn-info ">Start chatting</a></td>
+		{% endif %}
+     </tr>	
+		{% endfor %}    
+    </tbody>
+  </table> 
+ 
+	
+
+</div>
+
+{% endblock content %}
+
+

@@ -32,9 +32,9 @@ post_save.connect(create_profile,sender=User)
 
 
 class FriendRequest(models.Model):
-    to_user = models.ForeignKey(User,related_name='to_user',on_delete=models.CASCADE)
-    from_user = models.ForeignKey(User,related_name='from_user',on_delete=models.CASCADE)
+    to_profile = models.ForeignKey(Profile,related_name='to_profile',on_delete=models.CASCADE)
+    from_profile = models.ForeignKey(Profile,related_name='coming_from_profile',on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'From {self.from_user.username} to {self.to_user.username}'
+        return f'From {self.from_profile.user.username} to {self.to_profile.user.username}'
