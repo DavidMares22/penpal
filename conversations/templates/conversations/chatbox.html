@@ -1,0 +1,50 @@
+{% extends 'pages/base.html' %}
+
+
+{% block content %}
+
+{% include 'pages/includes/_sidebar.html' %}
+
+
+<div class="col-sm-8">
+
+<div id="messageFeed" class="p-3">
+    {% for m in msg %}  
+    <div class="card {% if request.user.profile == m.profile %} ml-auto text-light bg-dark{% endif %}" style="width:20rem;">
+      <div class="card-header">
+        {{m.profile}} | {{m.date}}
+      </div>
+      <div class="card-body">
+        {{m}}
+      </div>
+
+    </div>
+    {% endfor %}
+</div>
+
+  <form method="post" autocomplete="off">
+        {% csrf_token %}
+        <div class="input-group mb-3 ">
+          {% for field in form %}
+            {{ field }}
+          {% endfor %}        
+            <button type="submit" class="  btn btn-outline-primary">Send</button>
+        </div>
+  </form>
+
+
+</div>
+
+
+{% endblock content %}
+
+{% block js %}
+
+<script>
+var d = $('#messageFeed');
+d.scrollTop(d.prop("scrollHeight"));
+
+</script>
+  
+
+{% endblock js %}

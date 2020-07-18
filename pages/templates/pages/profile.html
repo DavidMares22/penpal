@@ -6,8 +6,8 @@
 {% include 'pages/includes/_sidebar.html' %}
 
 <div class="col-sm-8">
-
-
+	<div class="row">
+	<div class="col-sm-4">
 	<h3>{{profile.user }}</h3>
 	<h6>{{profile.first}}  {{profile.last}} | {{profile.user.email}}</h6>
 	<h6>Speaks: {{profile.speaks}}</h6>
@@ -15,14 +15,19 @@
  
 	
 
-<p>
+ 
+	</div>
+
+	<div class="col-sm-4">
 {% if request.user.profile.id == profile.id %}
 	<a class="btn btn-info" href="{% url 'pages:edit' %}"> Edit profile </a>
 {% endif %}
 
-</p>
+ 
 
+	</div>
 
+</div>
 
 	<h4> List of friends </h4>
 	<table class="table">

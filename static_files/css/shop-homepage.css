@@ -19,6 +19,14 @@ body {
 
 p { line-height: 20px;  }
 
+.unread{
+  font-weight: bold;
+  color: green;
+}
+
  
 
-
+#messageFeed{
+  height: calc(100vh - 172px); 
+  overflow-y: scroll; 
+}

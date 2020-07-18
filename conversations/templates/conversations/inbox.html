@@ -8,43 +8,78 @@
 <div class="col-sm-8">
 
 
-  {% for chat in chats %}
+  
 
-    <p>{{chat}}</p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Chat</th>
+            <th>Status</th>
 
-  {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+
+        {% for tw, u in chat_details %}
+           
+
+
+               <tr>
+            <td> <a href="{% url 'conversations:chatbox' tw.0.chat_id%}">
+                <p> {{forloop.counter}} chat with {{tw.0.profile}}</p>
+              </a> </td>
+
+            <td>
+             {% if u %}
+
+            <p class="unread">New message!</p>
+            {% else %}
+
+            <p> - </p>
+            {% endif %}
+
+            </td>
+          </tr>
+        {% endfor %}
+
+         
+
+        </tbody>
+      </table>
 
 
 
-	<h4> Start a new chat: </h4>
-	<table class="table">
+
+
+
+
+  
+  <table class="table">
     <thead>
       <tr>
-		<th>Username</th>
+        <th>Username</th>
         <th>Firstname</th>
         <th>Lastname</th>
         <th>Email</th>
       </tr>
     </thead>
     <tbody>
-	  {% for f in friends %}   
+      {% for f in friends %}
       <tr>
-		<td>{{f}}</td>  
-		<td>{{f.first}}</td>
+        <td>{{f}}</td>
+        <td>{{f.first}}</td>
         <td>{{f.last}}</td>
-		<td >{{f.user.email}}</td>
-		{% if request.user.profile.id == profile.id %}
-		<td ><a href="{% url 'conversations:inbox_new_chat' f.id %}" class="btn btn-info ">Start chatting</a></td>
-		{% endif %}
-     </tr>	
-		{% endfor %}    
+        <td>{{f.user.email}}</td>
+        {% if request.user.profile.id == profile.id %}
+        <td><a href="{% url 'conversations:inbox_new_chat' f.id %}" class="btn btn-info ">Start chatting</a></td>
+        {% endif %}
+      </tr>
+      {% endfor %}
     </tbody>
-  </table> 
- 
-	
+  </table>
+
+
 
 </div>
 
 {% endblock content %}
-
-

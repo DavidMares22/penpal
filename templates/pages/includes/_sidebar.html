@@ -16,7 +16,7 @@
           </h4>
            
             {% if request.user == profile.user  %}
-            Welcome, {{ user.username }} | <a href="{% url 'pages:logout' %}">Logout</a>
+            Welcome, {{ user.username }} | <a href="{% url 'pages:logout' %}">Logout</a> | <a href="{% url 'conversations:inbox'  %}">Inbox</a>
             {% elif request.user.is_anonymous %}
             <a href="{% url 'pages:register' %}">Register</a> | <a href="{% url 'pages:login' %}">Login</a>
             {% endif %}
