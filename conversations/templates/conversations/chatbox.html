@@ -11,8 +11,13 @@
 <div id="messageFeed" class="p-3">
     {% for m in msg %}  
     <div class="card {% if request.user.profile == m.profile %} ml-auto text-light bg-dark{% endif %}" style="width:20rem;">
-      <div class="card-header">
+      <div class="card-header font-weight-bold">
         {{m.profile}} | {{m.date}}
+         {% if request.user.profile == m.profile %}
+        <a href="{% url 'conversations:delete_message' m.id %}" class="close text-light" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </a>
+        {% endif %}
       </div>
       <div class="card-body">
         {{m}}
