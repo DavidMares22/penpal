@@ -8,18 +8,16 @@ from pages.forms import RegisterForm,ProfileEditForm
 from django.contrib.auth.models import User
 from .models import FriendRequest,Profile
 from django.core.paginator import Paginator
+from .utils import *
 
 def index(request):
-    
-
     users = Profile.objects.all()
-    profile = ''
 
     if request.user.is_authenticated:
         profile = Profile.objects.get(user=request.user)
         users = Profile.objects.exclude(user=request.user)
-        
-        
+    else:
+        profile = ''
     
     page_number = request.GET.get('page')
     paginator = Paginator(users, 2)
@@ -29,7 +27,6 @@ def index(request):
     
     context = {
         'profile':profile,
-        # 'users':users,
         'page_obj': page_obj
     }
     return render(request,'pages/index.html',context)
@@ -41,43 +38,22 @@ def profile(request,profile_id):
     friends = profile.friends.all()
     received_requests = FriendRequest.objects.filter(to_profile=profile)
     
-    button_text = ''
     if request.user.is_authenticated:
         if profile not in request.user.profile.friends.all():
             button_text = 'not_friend'
             if len(FriendRequest.objects.filter(from_profile=request.user.profile).filter(to_profile=profile)) == 1:
                 button_text = 'request_sent'
+    else:
+        button_text = ''
 
     context = {
         'profile':profile,
-        # 'id':profile.user.id,
         'friends':friends,
         'received_requests':received_requests,
         'button_text':button_text
     }
     return render(request,'pages/profile.html',context)
 
-
-def from_label_to_value(request,field):
-    LANGUAGE_CHOICES =( 
-    ("1", "English"), 
-    ("2", "Spanish"), 
-    ("3", "French"), 
-    ("4", "German"), 
-    )
-    if field == 'speaks':
-        labels = request.user.profile.speaks
-    else:
-        labels = request.user.profile.is_learning
-
-    if labels is not None:
-        values = [value for value, label in LANGUAGE_CHOICES if label in labels]
-        values = [int(i) for i in values]
-    else:
-        values = ''
-
-    return values
-    
 
 
 
@@ -190,14 +166,10 @@ def search(request):
     else:
         profile=''
 
-    # english,''german','french'
     query = request.GET.get('speaks').replace(" ", "")
     query2 = request.GET.get('learning').replace(" ", "")
-    # print(query)
-    # get a list of values ['english','german','french']
     list_speaks = query.split(',')
     list_learning = query2.split(',')
-    # print(list_learning)
 
     results = Profile.objects.filter(speaks__icontains=list_speaks[0]).filter(is_learning__icontains=list_learning[0])
 
@@ -215,12 +187,10 @@ def search(request):
     
     page_obj = paginator.get_page(page_number)
     
-    # print(results.values('speaks'))
 
     s = f"speaks={request.GET.get('speaks')}&learning={request.GET.get('learning')}&"
     context = {
     'profile':profile,
-    # 'users':results
     'page_obj':page_obj,
     's':s
     }

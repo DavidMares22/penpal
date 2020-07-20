@@ -6,17 +6,16 @@ from django.utils import timezone
 
 def inbox(request,profile_friend=None):
     
-    profile = Profile.objects.get(id=request.user.profile.id)
+    profile = request.user.profile
     friends = profile.friends.all()
     
-
     if profile_friend is not None:
-        p2 = Profile.objects.get(id=profile_friend)
+        p2 = friends.filter(id=profile_friend)
         chats_deleted = chat_members.objects.filter(profile_id = profile , deleted=True ).values_list('chat_id', flat=True)
         if chats_deleted:                        
-            chat_with_friend = chat_members.objects.filter(chat_id__in = chats_deleted , profile_id=p2.id )
+            chat_with_friend = chat_members.objects.filter(chat_id__in = chats_deleted , profile_id=p2[0].id )
             if chat_with_friend:
-                member = chat_members.objects.get(chat_id = chat_with_friend[0].chat_id , profile_id = request.user.profile.id)
+                member = chat_members.objects.get(chat_id = chat_with_friend[0].chat_id , profile = profile)
 
                 member.deleted = False
                 member.save()
@@ -39,9 +38,9 @@ def inbox(request,profile_friend=None):
     unread = []
     for c in chats:
 
-        currrent_chat_member = c.members.get(profile = request.user.profile)
+        currrent_chat_member = c.members.get(profile = profile)
         if currrent_chat_member.deleted == False:
-            chat_member = c.members.exclude(profile = request.user.profile)
+            chat_member = c.members.exclude(profile = profile)
             talking_with.append(chat_member)
 
         
@@ -49,8 +48,8 @@ def inbox(request,profile_friend=None):
             
             if c.get_msg.values('date').count() > 0:
                 m_date = c.get_msg.values('date').latest('date')
-                l_v = c.members.filter(profile = request.user.profile).values('last_viewed')
-
+                l_v = c.members.filter(profile = profile).values('last_viewed')
+            
                 if m_date['date'] > l_v[0]['last_viewed']:
                     unread.append(True)
                 else:
@@ -58,25 +57,19 @@ def inbox(request,profile_friend=None):
             else:
                 unread.append(False)
 
-        
-
-    
-    # print(talking_with[1][0].profile)
-    # print(talking_with)
-    
 
     context = {
     'profile':profile,
     'friends':friends,
+    'chat_details': zip(talking_with, unread)
     }
-    context['chat_details'] = zip(talking_with, unread)
+    
     
     return render(request,'conversations/inbox.html',context)
 
 
-def chatbox(request,chat_id):
-    
-    profile = Profile.objects.get(id=request.user.profile.id)
+def chatbox(request,chat_id):   
+    profile = request.user.profile
     form = MessageForm()
 
     if request.method == 'POST':
@@ -84,16 +77,15 @@ def chatbox(request,chat_id):
         if form.is_valid():
             new_msg = form.save(commit=False)
             new_msg.profile = profile
-            new_msg.chat = Chat.objects.get(id=chat_id)
+            new_msg.chat_id = chat_id
             new_msg.save()
             return redirect('conversations:chatbox', chat_id=chat_id)
     
     messages = Message.objects.filter(chat_id=chat_id)
 
-    last_viewed = chat_members.objects.filter(chat_id=chat_id).filter(profile=request.user.profile).values()
+    last_viewed = chat_members.objects.filter(chat_id=chat_id).filter(profile=profile)
     last_viewed.update(last_viewed = timezone.now())
-
-
+    
     context = {
         'chat_id':chat_id,
         'profile':profile,
@@ -111,11 +103,8 @@ def delete_message(request,message_id):
     return redirect('conversations:chatbox', chat_id=msg.chat_id )
 
 def delete_chat(request,chat_id):
-
     chat = Chat.objects.get(id = chat_id)
     members = chat.members.all()
-    # print(members[0])
-
     for m in members:
         if m.profile == request.user.profile:
            profile = m
@@ -125,17 +114,7 @@ def delete_chat(request,chat_id):
     if profile.deleted == False:
         profile.deleted = True
         profile.save()
-
     if friend.deleted == True:
         chat.delete()                    
-
-
-    # member = chat_members.objects.get(chat_id = chat_id , profile_id = request.user.profile.id)
-
-    # member.deleted = True
-    # member.save()
-    
-     
-
     return redirect('conversations:inbox')
 

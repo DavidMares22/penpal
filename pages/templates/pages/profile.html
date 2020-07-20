@@ -29,13 +29,11 @@
 
 </div>
 
-	<h4> List of friends </h4>
+	
 	<table class="table">
     <thead>
       <tr>
 		<th>Username</th>
-        <th>Firstname</th>
-        <th>Lastname</th>
         <th>Email</th>
       </tr>
     </thead>
@@ -43,11 +41,9 @@
 	  {% for f in friends %}   
       <tr>
 		<td>{{f}}</td>  
-		<td>{{f.first}}</td>
-        <td>{{f.last}}</td>
 		<td >{{f.user.email}}</td>
 		{% if request.user.profile.id == profile.id %}
-		<td ><a href="{% url 'pages:unfriend' f.id %}" class="btn btn-danger confirm-delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal" id="deleteButton{{f.id}}"> Unfriend</a></td>
+		<td ><a href="{% url 'pages:unfriend' f.id %}" class="btn btn-danger confirm-delete" data-toggle="modal" data-target="#confirmDeleteModal" id="{{f}} id: {{f.id}}"> Unfriend</a></td>
 		{% endif %}
      </tr>	
 		{% endfor %}    
@@ -90,7 +86,7 @@
 	<div class="modal-dialog" role="document">
 	  <div class="modal-content">
 		<div class="modal-body confirm-delete">
-		  Are you sure?
+		   
 		</div>
 		<div class="modal-footer">
 		  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -104,3 +100,21 @@
 {% endblock content %}
 
 
+
+{% block js %}
+ <script type="text/javascript">
+    $(document).on('click', '.confirm-delete', function () {
+      $("#confirmDeleteModal").attr("caller-id", $(this).attr("id"));
+	  $("div.modal-body").text("Are you sure you want to unfriend " + $(this).attr("id") + "?");
+	  
+    });
+
+    $(document).on('click', '#confirmDeleteButtonModal', function () {
+      var caller = $("#confirmDeleteButtonModal").closest(".modal").attr("caller-id");
+      window.location = $("#".concat(caller)).attr("href");
+    });
+
+  </script>
+
+
+{% endblock js %}

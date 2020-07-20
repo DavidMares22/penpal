@@ -46,8 +46,6 @@
     <thead>
       <tr>
         <th>Username</th>
-        <th>Firstname</th>
-        <th>Lastname</th>
         <th>Email</th>
       </tr>
     </thead>
@@ -55,8 +53,6 @@
       {% for f in friends %}
       <tr>
         <td>{{f}}</td>
-        <td>{{f.first}}</td>
-        <td>{{f.last}}</td>
         <td>{{f.user.email}}</td>
         {% if request.user.profile.id == profile.id %}
         <td><a href="{% url 'conversations:inbox_new_chat' f.id %}" class="btn btn-info ">Start chatting</a></td>
