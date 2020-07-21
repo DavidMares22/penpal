@@ -4,22 +4,19 @@ from .forms import MessageForm
 from .models import Chat,chat_members,Message
 from django.utils import timezone
 
-def inbox(request,profile_friend=None):
-    
+def inbox(request,profile_friend=None):    
     profile = request.user.profile
     friends = profile.friends.all()
     
     if profile_friend is not None:
-        p2 = friends.filter(id=profile_friend)
-        chats_deleted = chat_members.objects.filter(profile_id = profile , deleted=True ).values_list('chat_id', flat=True)
+        p2 = friends.filter(id=profile_friend).first()
+        chats_deleted = chat_members.objects.filter(profile = profile , deleted=True ).values_list('chat_id', flat=True)
         if chats_deleted:                        
-            chat_with_friend = chat_members.objects.filter(chat_id__in = chats_deleted , profile_id=p2[0].id )
+            chat_with_friend = chat_members.objects.filter(chat_id__in = chats_deleted , profile_id=p2.id).first()
             if chat_with_friend:
-                member = chat_members.objects.get(chat_id = chat_with_friend[0].chat_id , profile = profile)
-
+                member = chat_members.objects.get(chat_id = chat_with_friend.chat_id , profile = profile)
                 member.deleted = False
                 member.save()
-
                 return redirect('conversations:inbox')
         new_chat = Chat()
         new_chat.save()
@@ -32,25 +29,21 @@ def inbox(request,profile_friend=None):
     
     chats_ids = profile.chats.all().values_list('chat_id', flat=True)
     chats = Chat.objects.filter(id__in = chats_ids)
- 
-
-    talking_with = []
+    chatting_with = []
     unread = []
+
     for c in chats:
-
-        currrent_chat_member = c.members.get(profile = profile)
-        if currrent_chat_member.deleted == False:
-            chat_member = c.members.exclude(profile = profile)
-            talking_with.append(chat_member)
-
-        
-            friends = friends.exclude(user = chat_member[0].profile.user)
+        profile_chat_member = c.members.get(profile = profile)
+        if profile_chat_member.deleted == False:
+            friend_chat_member = c.members.exclude(profile = profile).first()
+            chatting_with.append(friend_chat_member)   
+            friends = friends.exclude(user = friend_chat_member.profile.user)
             
             if c.get_msg.values('date').count() > 0:
                 m_date = c.get_msg.values('date').latest('date')
-                l_v = c.members.filter(profile = profile).values('last_viewed')
+                lv_date = c.members.filter(profile = profile).values('last_viewed').first()
             
-                if m_date['date'] > l_v[0]['last_viewed']:
+                if m_date['date'] > lv_date['last_viewed']:
                     unread.append(True)
                 else:
                     unread.append(False)
@@ -61,10 +54,8 @@ def inbox(request,profile_friend=None):
     context = {
     'profile':profile,
     'friends':friends,
-    'chat_details': zip(talking_with, unread)
+    'chat_details': zip(chatting_with, unread)
     }
-    
-    
     return render(request,'conversations/inbox.html',context)
 
 

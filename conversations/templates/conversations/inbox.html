@@ -22,13 +22,13 @@
           {% for tw, u in chat_details %}
           <tr>
             <td>
-              <a href="{% url 'conversations:chatbox' tw.0.chat_id%}">
-                  <p> {{forloop.counter}} chat with {{tw.0.profile}}</p>
+              <a href="{% url 'conversations:chatbox' tw.chat_id%}">
+                  <p> {{forloop.counter}} chat with {{tw.profile}}</p>
               </a> 
             </td>
 
             <td>{% if u %}<p class="unread">New message!</p>{% else %}<p> - </p>{% endif %}</td>
-            <td><a href="{% url 'conversations:delete_chat' tw.0.chat_id %}" class="btn btn-outline-danger ">Delete chat</a></td>
+            <td><a href="{% url 'conversations:delete_chat' tw.chat_id %}" class="btn btn-outline-danger ">Delete chat</a></td>
           </tr>          
           {% endfor %}
 

@@ -57,8 +57,7 @@ def profile(request,profile_id):
 
 
 
-def edit_profile(request):
-    
+def edit_profile(request):    
     if request.method == 'POST':
         form = ProfileEditForm(instance=request.user.profile,data=request.POST,files=request.FILES)
         if form.is_valid():
@@ -69,15 +68,9 @@ def edit_profile(request):
             messages.success(request,'Profile successfully updated')
             return redirect('pages:profile', profile_id=request.user.profile.id)
     else:        
-        
-        
         is_learning = from_label_to_value(request, 'is_learning')
         speaks = from_label_to_value(request, 'speaks')
-        
-        
-        form = ProfileEditForm(instance=request.user.profile,initial={'is_learning': is_learning, 'speaks':speaks })
-        
-        
+        form = ProfileEditForm(instance=request.user.profile,initial={'is_learning': is_learning, 'speaks':speaks })   
     return render(request, 'pages/edit.html',{'form':form})
 
 
@@ -164,7 +157,7 @@ def search(request):
     if request.user.is_authenticated:
         profile = Profile.objects.get(user=request.user)  
     else:
-        profile=''
+        profile = ''
 
     query = request.GET.get('speaks').replace(" ", "")
     query2 = request.GET.get('learning').replace(" ", "")
@@ -173,18 +166,13 @@ def search(request):
 
     results = Profile.objects.filter(speaks__icontains=list_speaks[0]).filter(is_learning__icontains=list_learning[0])
 
-    if len(list_speaks)>1:
-        for lq in range(len(list_speaks)-1):
-            results = results.filter(speaks__icontains=list_speaks[lq+1])
     
-    if len(list_learning)>1:
-        for lq in range(len(list_learning)-1):
-            results = results.filter(is_learning__icontains=list_learning[lq+1])
-    
+    results = sort(elements=list_speaks,results=results,l_s=True)
+    results = sort(elements=list_learning,results=results,l_l=True)
+
+
     page_number = request.GET.get('page')
     paginator = Paginator(results, 2)
-    
-    
     page_obj = paginator.get_page(page_number)
     
 
@@ -196,3 +184,6 @@ def search(request):
     }
 
     return render(request,'pages/index.html',context)
+
+
+

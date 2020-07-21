@@ -22,3 +22,17 @@ def from_label_to_value(request,field):
         values = ''
 
     return values
+
+
+def sort(elements,results,l_s=False,l_l=False):
+    if len(elements)>1:
+        for e in range(len(elements)):
+            if e == 0:
+                continue
+
+            if l_s:
+                results = results.filter(speaks__icontains=elements[e])
+            if l_l:
+                results = results.filter(is_learning__icontains=elements[e])
+    
+    return results
