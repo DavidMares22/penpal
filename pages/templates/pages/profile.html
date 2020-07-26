@@ -1,69 +1,84 @@
 {% extends 'pages/base.html' %}
 
 
+
 {% block content %}
+
+<div class="row">
+
+<div class="col-lg-3 col-md-3 col-sm-6">
 
 {% include 'pages/includes/_sidebar.html' %}
 
-<div class="col-sm-8">
-	<div class="row">
-	<div class="col-sm-4">
+</div>
+
+
+
+<div class="col-lg-9 col-md-9 col-sm-6">
+	
+	{% if request.user.profile.id == profile.id %}
+		<div class="float-right">
+			<a class="btn btn-info" href="{% url 'pages:edit' %}"> Edit profile </a>
+		</div> 	
+	{% elif request.user.is_authenticated %}
+		
+		{% if btn_text == 'not_friend'%}
+		<div class="float-right">
+			<a class='btn btn-primary' href="{% url 'pages:send_request' profile.id %}">Add Friend</a>
+		</div> 	
+		{% elif btn_text == 'request_sent' %}
+		<div class="float-right">
+			<a class="btn btn-warning" href="{% url 'pages:cancel_request' profile.id %}">Cancel Request</a>
+		</div> 				
+		{% endif %}
+
+	{% endif %}
+	
+
+	
 	<h3>{{profile.user }}</h3>
+	<div class="my-4">
 	<h6>{{profile.first}}  {{profile.last}} | {{profile.user.email}}</h6>
 	<h6>Speaks: {{profile.speaks}}</h6>
 	<h6>Is learning: {{profile.is_learning}}</h6>
- 
-	
-
- 
 	</div>
-
-	<div class="col-sm-4">
-{% if request.user.profile.id == profile.id %}
-	<a class="btn btn-info" href="{% url 'pages:edit' %}"> Edit profile </a>
-{% endif %}
-
- 
-
-	</div>
-
-</div>
-
 	
+	<div class="table-responsive">
 	<table class="table">
-    <thead>
-      <tr>
-		<th>Username</th>
-        <th>Email</th>
-      </tr>
-    </thead>
-    <tbody>
-	  {% for f in friends %}   
-      <tr>
-		<td>{{f}}</td>  
-		<td >{{f.user.email}}</td>
-		{% if request.user.profile.id == profile.id %}
-		<td ><a href="{% url 'pages:unfriend' f.id %}" class="btn btn-danger confirm-delete" data-toggle="modal" data-target="#confirmDeleteModal" id="{{f}} id: {{f.id}}"> Unfriend</a></td>
-		{% endif %}
-     </tr>	
-		{% endfor %}    
-    </tbody>
-  </table>
+		<thead>
+		  <tr>
+			<th>Username</th>
+			<th>Email</th>
+		  </tr>
+		</thead>
+		<tbody>
+		  {% for f in friends %}   
+		  <tr>
+			<td>{{f}}</td>  
+			<td >{{f.user.email}}</td>
+			{% if request.user.profile.id == profile.id %}
+			<td ><a href="{% url 'pages:unfriend' f.id %}" class="btn btn-danger confirm-delete" data-toggle="modal" data-target="#confirmDeleteModal" id="{{f}}"> Unfriend</a></td>
+			{% endif %}
+		 </tr>	
+			{% endfor %}    
+		</tbody>
+	  </table>
+	</div>
+
 
  
+</div>
+	
 
-<p>
-{% if request.user.is_authenticated and request.user.profile.id != profile.id %}
 
-        {% if button_text == 'not_friend'%}
-			<a class='btn btn-primary' href="{% url 'pages:send_request' profile.id %}">Add Friend</a>
-		{% elif button_text == 'request_sent' %}
-			<a class="btn btn-warning" href="{% url 'pages:cancel_request' profile.id %}">Cancel Request</a>
-		{% endif %}
 
-{% endif %}
+	
+	
+ 
 
-</p>
+
+
+
 
 <p>
 {% if request.user.profile.id == profile.id and received_requests %}
@@ -78,6 +93,8 @@
 	
 {% endif %}
 </p>
+
+
 
 
 </div>
@@ -102,6 +119,7 @@
 
 
 {% block js %}
+
  <script type="text/javascript">
     $(document).on('click', '.confirm-delete', function () {
       $("#confirmDeleteModal").attr("caller-id", $(this).attr("id"));

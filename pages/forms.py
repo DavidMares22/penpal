@@ -1,15 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-
+from .utils import LANGUAGE_CHOICES
 from .models import Profile
 
-LANGUAGE_CHOICES =( 
-    ("1", "English"), 
-    ("2", "Spanish"), 
-    ("3", "French"), 
-    ("4", "German"), 
-    )
 
 class ProfileEditForm(forms.ModelForm):
     first = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -21,9 +15,12 @@ class ProfileEditForm(forms.ModelForm):
         fields = ['first','last','speaks','is_learning','photo']
         
     
-    def selected_speaks_labels(self,method):
-        list_lang = [label for value, label in self.fields[method].choices if value in self[method].value()]
-        languages = ', '.join(list_lang)
+    def from_value_to_label(self,method):
+        list_label = [label for value, label in self.fields[method].choices if value in self[method].value()]
+        print(self[method].value())
+        # ['French', 'German']
+        languages = ', '.join(list_label)
+        # French, German
         return languages
     
 

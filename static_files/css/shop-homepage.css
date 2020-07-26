@@ -1,6 +1,6 @@
 
 
-.main-area{
+.container{
   margin-top: 1.5rem!important;
 }
 
@@ -10,8 +10,10 @@
   
 }
 
+.card{
+  margin-bottom: 1.5rem!important;
+}
 
-p { line-height: 20px;  }
 
 .unread{
   font-weight: bold;

@@ -18,6 +18,9 @@ class Profile(models.Model):
 
     def get_absolute_url(self):
         return reverse("pages:profile", kwargs={"profile_id": self.pk})
+    
+    class Meta:
+        ordering = ['-id']
             
 
 

@@ -20,9 +20,7 @@ def index(request):
         profile = ''
     
     page_number = request.GET.get('page')
-    paginator = Paginator(users, 2)
-    
-    
+    paginator = Paginator(users, 4)
     page_obj = paginator.get_page(page_number)
     
     context = {
@@ -33,24 +31,23 @@ def index(request):
 
 
 def profile(request,profile_id):
-    
     profile = Profile.objects.get(id=profile_id)
     friends = profile.friends.all()
     received_requests = FriendRequest.objects.filter(to_profile=profile)
     
+    btn_text = ''
     if request.user.is_authenticated:
         if profile not in request.user.profile.friends.all():
-            button_text = 'not_friend'
+            btn_text = 'not_friend'
             if len(FriendRequest.objects.filter(from_profile=request.user.profile).filter(to_profile=profile)) == 1:
-                button_text = 'request_sent'
-    else:
-        button_text = ''
+                btn_text = 'request_sent'
+        
 
     context = {
         'profile':profile,
         'friends':friends,
         'received_requests':received_requests,
-        'button_text':button_text
+        'btn_text':btn_text
     }
     return render(request,'pages/profile.html',context)
 
@@ -62,13 +59,14 @@ def edit_profile(request):
         form = ProfileEditForm(instance=request.user.profile,data=request.POST,files=request.FILES)
         if form.is_valid():
             obj = form.save(commit=False)
-            obj.speaks = form.selected_speaks_labels('speaks')
-            obj.is_learning = form.selected_speaks_labels('is_learning')
+            obj.speaks = form.from_value_to_label('speaks')
+            obj.is_learning = form.from_value_to_label('is_learning')
             obj.save()
             messages.success(request,'Profile successfully updated')
             return redirect('pages:profile', profile_id=request.user.profile.id)
     else:        
         is_learning = from_label_to_value(request, 'is_learning')
+        # [3, 4]
         speaks = from_label_to_value(request, 'speaks')
         form = ProfileEditForm(instance=request.user.profile,initial={'is_learning': is_learning, 'speaks':speaks })   
     return render(request, 'pages/edit.html',{'form':form})
@@ -104,6 +102,7 @@ def accept_friend_request(request, from_profile_id):
 
 def unfriend(request,profile_id):
     profile_to_unfriend = Profile.objects.get(id=profile_id)
+    print(profile_to_unfriend)
     profile = request.user.profile
     profile.friends.remove(profile_to_unfriend)
     return redirect('pages:profile',profile_id=profile.id)

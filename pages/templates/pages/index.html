@@ -4,17 +4,17 @@
 
 {% block content %}
 
+
+<div class="row">
+
+  <div class="col-lg-3 col-md-3 col-sm-6">
+
 {% include 'pages/includes/_sidebar.html' %}
  
-
-    <div class="col-sm-7 col-md-7 col-lg-8">
-
-
-
-      <div class="row">
-
+</div>
      
-        <div class="card bg-light" style="width: 100%;">
+<div class="col-lg-9 col-md-9 col-sm-6">
+        <div class="card bg-light">
           <div class="card-header text-center">
             Search for Penpals
           </div>
@@ -36,57 +36,36 @@
           </div>
       
       </div>
+    
+
+    </div>
 
 
+  </div>
+
+
+  <div class="row">
+    
       
-
-
-
-<div class="main-area row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 " style="width: 100%;">
-
-          
-{% comment %} {% for u in users  %} {% endcomment %}
-        {% for u in page_obj  %}
-          <div class="col mb-4">
-          
-            <div class="card">
+            {% for u in page_obj  %}        
+          <div class="col-md-3 col-sm-6" >
+            <div class="card" >
               <img src="{{u.photo.url}}" class="card-img-top mx-auto" >
-              <div class="card-body">
+              <div class="card-body ">
                 <h5 class="card-title text-center"><a href="{{u.get_absolute_url}}">{{u}}</a></h5> 
-                <p class="card-text">Speaks: {{u.speaks}}  </p>
-                <p class="card-text">
-                  is learning {{u.is_learning}}
-                </p>
+                <span class="card-text"> <strong> Speaks:</strong> {{u.speaks}}</span><br>
+                <span><strong>Is learning:</strong> {{u.is_learning}}</span>                
               </div>
             </div>
-            
-          </div>
-        {% endfor %}
-
-
-
-
-
-        </div>
-
-
-        <!-- main-area -->
+          </div>  
+            {% endfor %}    
+                   
+  </div>      
+        
+        
       
-      
-      
-      
-      
-      
-  
-      
-      </div>
-      <!-- /.row -->
-
-
-
-      
-    </div>
-    <!-- /.col-lg-9 -->
+        
+    
    
 
 {% endblock %}

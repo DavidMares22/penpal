@@ -3,13 +3,16 @@
 
 {% block content %}
 
+<div class="row">
+<div class="col-lg-3 col-md-3 col-sm-6">
 {% include 'pages/includes/_sidebar.html' %}
+</div>
 
-<div class="col-sm-8">
+<div class="col-lg-9 col-md-9 col-sm-6">
 
 
   
-
+<div class="table-responsive">
   <table class="table">
     <thead>
       <tr>
@@ -34,14 +37,14 @@
 
         </tbody>
   </table>
+</div>
 
 
 
 
 
 
-
-  
+<div class="table-responsive">  
   <table class="table">
     <thead>
       <tr>
@@ -55,15 +58,17 @@
         <td>{{f}}</td>
         <td>{{f.user.email}}</td>
         {% if request.user.profile.id == profile.id %}
-        <td><a href="{% url 'conversations:inbox_new_chat' f.id %}" class="btn btn-info ">Start chatting</a></td>
+        <td><a href="{% url 'conversations:inbox_new_chat' f.id %}" class="btn btn-outline-info ">Start chatting</a></td>
         {% endif %}
       </tr>
       {% endfor %}
     </tbody>
   </table>
+</div>  
 
 
 
+</div>
 </div>
 
 {% endblock content %}

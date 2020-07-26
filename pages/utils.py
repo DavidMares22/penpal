@@ -4,7 +4,9 @@ LANGUAGE_CHOICES =(
     ("1", "English"), 
     ("2", "Spanish"), 
     ("3", "French"), 
-    ("4", "German"), 
+    ("4", "German"),
+    ("5", "Italian"),
+    ("6", "Russian"),
     )
 
 
@@ -16,7 +18,9 @@ def from_label_to_value(request,field):
         labels = request.user.profile.is_learning
 
     if labels is not None:
+        # French, German
         values = [value for value, label in LANGUAGE_CHOICES if label in labels]
+        # ['3','4']
         values = [int(i) for i in values]
     else:
         values = ''

@@ -1,27 +1,26 @@
 
-    <div class="col-lg-3 col-sm-4">
+    
 
 
 
-      <div class="card ">
+      <div class="card bg-light" style="max-width: 30rem;">
 
         {% if profile.photo %}
         <img class="card-img-top mx-auto rounded-circle " src="{{profile.photo.url}}" alt="">
         {% else %}
         <img class="card-img-top mx-auto rounded-circle " src="http://placehold.it/200x200" alt="">
         {% endif %}
-        <div class="card-body ">
-          <h4 class="card-title text-center">
+        <div class="card-body text-center">
+          <h4 class="card-title ">
             <a href="{{profile.get_absolute_url }}">{{profile}}</a>
           </h4>
            
             {% if request.user == profile.user  %}
-            Welcome, {{ user.username }} | <a href="{% url 'pages:logout' %}">Logout</a> | <a href="{% url 'conversations:inbox'  %}">Inbox</a>
+            Welcome, {{ user.username }}  <p><a href="{% url 'pages:logout' %}">Logout</a> | <a href="{% url 'conversations:inbox'  %}">Inbox</a></p>
             {% elif request.user.is_anonymous %}
-            <a href="{% url 'pages:register' %}">Register</a> | <a href="{% url 'pages:login' %}">Login</a>
+            <p><a href="{% url 'pages:register' %}">Register</a> | <a href="{% url 'pages:login' %}">Login</a></p>
             {% endif %}
         </div>
          
       </div>
 
-    </div>
