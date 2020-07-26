@@ -4,12 +4,12 @@
 {% block content %}
 
 <div class="row">
-<div class="col-lg-3 col-md-3 col-sm-6">
+<div class="col-lg-3 col-md-3 col-sm-6 mx-auto">
 {% include 'pages/includes/_sidebar.html' %}
 </div>
 
 
-<div class="col-lg-9 col-md-9 col-sm-12">
+<div class="col-lg-9 col-md-9 col-sm-12 lolz">
 
 <div id="messageFeed" class="p-3">
     {% for m in msg %}  
@@ -54,6 +54,7 @@
 <script>
 var d = $('#messageFeed');
 d.scrollTop(d.prop("scrollHeight"));
+$('html, body').animate({scrollTop:$(document).height()}, 'slow');
 
 </script>
   

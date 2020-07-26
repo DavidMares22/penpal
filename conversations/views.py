@@ -39,12 +39,14 @@ def inbox(request,profile_friend=None):
             chatting_with.append(friend_chat_member)   
             friends = friends.exclude(user = friend_chat_member.profile.user)
             
-            if c.get_msg.values('date').count() > 0:
+            if c.get_msg.count() > 0:
                 m_date = c.get_msg.values('date').latest('date')
                 lv_date = c.members.filter(profile = profile).values('last_viewed').first()
             
                 if m_date['date'] > lv_date['last_viewed']:
-                    unread.append(True)
+                    
+                    msg_count = c.get_msg.filter(date__gt=lv_date['last_viewed']).count()
+                    unread.append(msg_count)
                 else:
                     unread.append(False)
             else:

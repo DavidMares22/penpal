@@ -6,7 +6,7 @@
 
 <div class="row">
 
-<div class="col-lg-3 col-md-3 col-sm-6">
+<div class="col-lg-3 col-md-3 col-sm-6 mx-auto">
 
 {% include 'pages/includes/_sidebar.html' %}
 
@@ -14,7 +14,7 @@
 
 
 
-<div class="col-lg-9 col-md-9 col-sm-6">
+<div class="col-lg-9 col-md-9 col-sm-12">
 	
 	{% if request.user.profile.id == profile.id %}
 		<div class="float-right">
@@ -43,8 +43,12 @@
 	<h6>Is learning: {{profile.is_learning}}</h6>
 	</div>
 	
+
+
+	{% if friends %}
 	<div class="table-responsive">
 	<table class="table">
+		<caption>List of Penpals</caption>
 		<thead>
 		  <tr>
 			<th>Username</th>
@@ -64,7 +68,30 @@
 		</tbody>
 	  </table>
 	</div>
+	{% endif %}
 
+
+	{% if request.user.profile.id == profile.id and received_requests %}
+
+<div class="table-responsive">
+	<table class="table">
+		<caption>Received friend requests: </caption>
+	 
+		<tbody>
+		  {% for r_request in received_requests %}
+		  <tr>
+			<td>{{ r_request }}</td>
+			<td><a class='btn btn-primary' href="{% url 'pages:accept_request' r_request.from_profile.id %}">Accept</a></td>
+			<td><a class='btn btn-danger' href="{% url 'pages:delete_request' r_request.from_profile.id %}">Delete</a></td>
+		 </tr>	
+			{% endfor %}    
+		</tbody>
+	  </table>
+	</div>
+    
+   
+	
+{% endif %}
 
  
 </div>
@@ -80,19 +107,9 @@
 
 
 
-<p>
-{% if request.user.profile.id == profile.id and received_requests %}
-    <h4>Received Friend requests</h4>
-    
-		{% for r_request in received_requests %}
-			<p><a href="">{{ r_request }}</a></p>
-			<small><a class='btn btn-primary' href="{% url 'pages:accept_request' r_request.from_profile.id %}">Accept</a></small>
-			<small><a class='btn btn-danger' href="{% url 'pages:delete_request' r_request.from_profile.id %}">Delete</a></small>
-		{% endfor %}    
 
-	
-{% endif %}
-</p>
+
+
 
 
 

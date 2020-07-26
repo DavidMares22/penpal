@@ -1,8 +1,6 @@
 
 
-.container{
-  margin-top: 1.5rem!important;
-}
+
 
 .card-img-top {
   width: 70%;
@@ -15,12 +13,7 @@
 }
 
 
-.unread{
-  font-weight: bold;
-  color: green;
-}
-
- 
+caption { caption-side:top; } 
 
 #messageFeed{
   height: calc(100vh - 172px); 

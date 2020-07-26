@@ -18,6 +18,9 @@ class Message(models.Model):
 
     def __str__(self):
         return self.content
+    
+    class Meta:
+        ordering = ['date']        
 
 class chat_members(models.Model):
     chat = models.ForeignKey(Chat,related_name='members',on_delete=models.CASCADE)
