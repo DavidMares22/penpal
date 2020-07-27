@@ -4,44 +4,42 @@
 {% block content %}
 
 <div class="row">
-<div class="col-lg-3 col-md-3 col-sm-6 mx-auto">
-{% include 'pages/includes/_sidebar.html' %}
-</div>
 
+  {% include 'pages/includes/_sidebar.html' %}
 
-<div class="col-lg-9 col-md-9 col-sm-12 lolz">
+    <div class="col-lg-9 col-md-9 col-sm-12 lolz">
 
-<div id="messageFeed" class="p-3">
-    {% for m in msg %}  
-    <div class="card {% if request.user.profile == m.profile %} ml-auto text-light bg-dark{% endif %}" style="width:20rem;">
-      <div class="card-header font-weight-bold">
-        {{m.profile}} | {{m.date}}
-         {% if request.user.profile == m.profile %}
-        <a href="{% url 'conversations:delete_message' m.id %}" class="close text-light" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </a>
-        {% endif %}
+      <div id="messageFeed" class="p-3">
+          {% for m in msg %}  
+          <div class="card {% if request.user.profile == m.profile %} ml-auto text-light bg-dark{% endif %}" style="width:20rem;">
+            <div class="card-header font-weight-bold">
+              {{m.profile}} | {{m.date}}
+              {% if request.user.profile == m.profile %}
+              <a href="{% url 'conversations:delete_message' m.id %}" class="close text-light" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </a>
+              {% endif %}
+            </div>
+            <div class="card-body">
+              {{m}}
+            </div>
+
+          </div>
+          {% endfor %}
       </div>
-      <div class="card-body">
-        {{m}}
-      </div>
+
+      <form method="post" autocomplete="off">
+            {% csrf_token %}
+            <div class="input-group mb-3 ">
+              {% for field in form %}
+                {{ field }}
+              {% endfor %}        
+                <button type="submit" class="  btn btn-outline-primary">Send</button>
+            </div>
+      </form>
+
 
     </div>
-    {% endfor %}
-</div>
-
-  <form method="post" autocomplete="off">
-        {% csrf_token %}
-        <div class="input-group mb-3 ">
-          {% for field in form %}
-            {{ field }}
-          {% endfor %}        
-            <button type="submit" class="  btn btn-outline-primary">Send</button>
-        </div>
-  </form>
-
-
-</div>
 
 </div>
 

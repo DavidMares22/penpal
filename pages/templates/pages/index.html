@@ -3,51 +3,34 @@
 
 
 {% block content %}
-
-
-<div class="row">
-
-  <div class="col-lg-3 col-md-3 col-sm-6">
-
-{% include 'pages/includes/_sidebar.html' %}
+  
+  <div class="row">
+    {% include 'pages/includes/_sidebar.html' %}
  
-</div>
-     
-<div class="col-lg-9 col-md-9 col-sm-6">
-        <div class="card bg-light">
-          <div class="card-header text-center">
-            Search for Penpals
-          </div>
+    <div class="col-lg-9 col-md-9 col-sm-12">
+      <div class="card bg-light">
+        <div class="card-header text-center">Search for Penpals</div>
           <div class="card-body">
             <form action="{% url 'pages:search' %}" method="GET">
               <div class="form-group ">
-                  <label for="langspeaks">Speaks</label>
+                <label for="langspeaks">Speaks</label>
                 <input name="speaks" type="text" class="form-control" id="langspeaks" value="{{ request.GET.speaks }}" placeholder="value 1, value2">
               </div>
-
               <div class="form-group ">
                 <label for="langlearning">Is learning</label>
                 <input name="learning" type="text" class="form-control" id="langlearning" value="{{ request.GET.learning }}" placeholder="value 1, value2">
               </div>
-
-
               <button type="submit" class="btn btn-info">Search</button>
             </form>
           </div>
-      
       </div>
-    
-
     </div>
-
 
   </div>
 
 
   <div class="row">
-    
-      
-            {% for u in page_obj  %}        
+      {% for u in page_obj  %}        
           <div class="col-md-3 col-sm-6" >
             <div class="card" >
               <img src="{{u.photo.url}}" class="card-img-top mx-auto" >
@@ -58,14 +41,6 @@
               </div>
             </div>
           </div>  
-            {% endfor %}    
-                   
+      {% endfor %}                       
   </div>      
-        
-        
-      
-        
-    
-   
-
 {% endblock %}

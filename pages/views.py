@@ -171,7 +171,7 @@ def search(request):
 
 
     page_number = request.GET.get('page')
-    paginator = Paginator(results, 2)
+    paginator = Paginator(results, 4)
     page_obj = paginator.get_page(page_number)
     
 
