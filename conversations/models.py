@@ -1,5 +1,7 @@
 from django.db import models
 from pages.models import Profile
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 
 
 
@@ -31,4 +33,9 @@ class chat_members(models.Model):
     def __str__(self):
         return f'Chat id: {self.chat} user: {self.profile.user} last viewed: {self.last_viewed} deleted: {self.deleted}'
     
-    
+
+@receiver(post_delete, sender=chat_members)
+def submission_delete(sender, instance, **kwargs):
+    chat = Chat.objects.filter(id = instance.chat.id)
+    print(chat)
+    chat.delete()

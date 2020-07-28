@@ -108,6 +108,6 @@ def delete_chat(request,chat_id):
         profile.deleted = True
         profile.save()
     if friend.deleted == True:
-        chat.delete()                    
+        friend.delete() #we are usign signals as soon as delete member, chat gets deleted                  
     return redirect('conversations:inbox')
 
